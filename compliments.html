@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Personalized Message</title>
+    <meta name="description" content="Receive your personalized premium compliments.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="noise-overlay"></div>
+
+<!-- ANIMATED BACKGROUND -->
+<div class="background-animation" id="bgAnimation">
+    <div class="aurora-layer">
+        <div class="aurora-blob blob-1"></div>
+        <div class="aurora-blob blob-2"></div>
+        <div class="aurora-blob blob-3"></div>
+    </div>
+    <div class="floating-shape shape1"></div>
+    <div class="floating-shape shape2"></div>
+    <div class="floating-shape shape3"></div>
+    <div class="particle-container" id="particleContainer"></div>
+    <canvas id="sparkleOverlay" class="sparkle-overlay-canvas"></canvas>
+</div>
+
+<!-- PAGE TRANSITION -->
+<div class="page-transition-overlay" id="pageTransition">
+    <div class="transition-circle"></div>
+</div>
+
+<!-- FULLSCREEN LOVE EXPLOSION -->
+<div class="love-explosion-overlay" id="loveOverlay">
+    <div class="love-bg-ripple"></div>
+    <div class="love-center-text">
+        <span class="love-big-emoji" id="loveBigEmoji">💖</span>
+        <span class="love-big-text" id="loveBigText">You're absolutely loved</span>
+        <span class="love-sub-text" id="loveSubText">Tap anywhere to continue ✨</span>
+    </div>
+    <p class="love-close-hint">Tap anywhere to close</p>
+</div>
+
+<!-- COMPLIMENTS PAGE -->
+<section class="page active" id="complimentsPage">
+    <div class="content-wrapper">
+        <button class="back-btn" onclick="goBack()">
+            <span class="back-arrow">←</span>
+            <span>Back</span>
+        </button>
+
+        <div class="compliment-container">
+            <h1 class="greeting-message" id="greetingMessage">Hey Handsome ✨</h1>
+            <p class="greeting-subtitle" id="greetingSubtitle">You deserve to feel extraordinary</p>
+            <div class="compliments-list" id="complimentsList"></div>
+
+            <button class="explore-btn" onclick="goToInstagram()">
+                <span class="btn-shimmer"></span>
+                <span class="btn-content">
+                    <span>Explore More</span>
+                    <span class="btn-arrow">→</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var gender = urlParams.get('gender') || 'male';
+
+    var complimentsData = {
+        male: {
+            greeting: 'Hey Handsome ✨',
+            subtitle: 'You deserve to feel extraordinary',
+            messages: [
+                { icon: '👑', text: 'You carry confidence like a crown.', love: 'That energy is POWERFUL 🔥', loveEmoji: '👑' },
+                { icon: '⚡', text: 'Your energy feels powerful and calm.', love: 'Electric & unstoppable ⚡', loveEmoji: '⚡' },
+                { icon: '💎', text: 'You deserve everything premium in life.', love: 'Pure diamond energy 💎', loveEmoji: '💎' },
+                { icon: '🌟', text: 'Your presence speaks volumes without words.', love: 'A walking masterpiece 🌟', loveEmoji: '🌟' },
+                { icon: '🔥', text: 'You walk in and the whole room shifts.', love: 'The vibe is UNMATCHED 🔥', loveEmoji: '🔥' },
+                { icon: '🏆', text: 'Built different. Wired for greatness.', love: 'Champion energy always 🏆', loveEmoji: '🏆' }
+            ]
+        },
+        female: {
+            greeting: 'Hey Beautiful ✨',
+            subtitle: 'You shine brighter than diamonds',
+            messages: [
+                { icon: '✨', text: 'You shine with elegance and grace.', love: 'Radiant & unstoppable ✨', loveEmoji: '💖' },
+                { icon: '🦋', text: 'Your presence feels soft, strong, and unforgettable.', love: 'A rare kind of beautiful 🦋', loveEmoji: '🦋' },
+                { icon: '🌸', text: 'You deserve every beautiful thing in life.', love: 'You are SO deserving 🌸', loveEmoji: '🌸' },
+                { icon: '👑', text: 'Your strength is your grace, your beauty is your power.', love: 'A queen in every way 👑', loveEmoji: '👑' },
+                { icon: '💫', text: 'You light up every room you walk into.', love: 'Your glow is everything 💫', loveEmoji: '💫' },
+                { icon: '🌹', text: 'Rare, radiant, and absolutely remarkable.', love: 'One of a kind, always 🌹', loveEmoji: '🌹' }
+            ]
+        }
+    };
+
+    // ===== FULLSCREEN LOVE EXPLOSION =====
+    var loveOverlay = document.getElementById('loveOverlay');
+    var loveTimeout = null;
+
+    function launchLoveExplosion(item) {
+        var overlay = loveOverlay;
+        document.getElementById('loveBigEmoji').textContent = item.loveEmoji;
+        document.getElementById('loveBigText').textContent = item.love;
+
+        overlay.classList.add('active');
+
+        // Launch raining hearts all over the screen
+        spawnScreenHearts(item.loveEmoji);
+
+        // Auto-close after 3.5s
+        clearTimeout(loveTimeout);
+        loveTimeout = setTimeout(closeLoveOverlay, 3500);
+
+        overlay.onclick = closeLoveOverlay;
+    }
+
+    function closeLoveOverlay() {
+        clearTimeout(loveTimeout);
+        loveOverlay.classList.remove('active');
+        // Remove any lingering screen hearts
+        document.querySelectorAll('.screen-heart').forEach(function(el) { el.remove(); });
+    }
+
+    function spawnScreenHearts(mainEmoji) {
+        var maleHearts  = ['💙', '🤍', '⚡', '💎', '✨', '🌟', '👑', '🔵', '🏆'];
+        var femHearts   = ['❤️', '💖', '💕', '💗', '💓', '✨', '🤍', '💜', '🌸', '💫'];
+        var hearts = gender === 'male' ? maleHearts : femHearts;
+        hearts[0] = mainEmoji;
+
+        var count = 40;
+        for (var i = 0; i < count; i++) {
+            (function(idx) {
+                setTimeout(function() {
+                    var el = document.createElement('div');
+                    el.className = 'screen-heart';
+
+                    var startX = Math.random() * window.innerWidth;
+                    var startY = window.innerHeight + 60;
+                    var endX = startX + (Math.random() - 0.5) * 300;
+                    var size = (Math.random() * 1.8 + 1.0) + 'rem';
+                    var dur = (Math.random() * 2 + 2.2) + 's';
+                    var rot1 = (Math.random() - 0.5) * 60 + 'deg';
+                    var rot2 = (Math.random() - 0.5) * 120 + 'deg';
+
+                    el.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    el.style.setProperty('--size', size);
+                    el.style.setProperty('--dur', dur);
+                    el.style.setProperty('--sx', startX + 'px');
+                    el.style.setProperty('--sy', startY + 'px');
+                    el.style.setProperty('--mx', endX + 'px');
+                    el.style.setProperty('--ex', endX + (Math.random() - 0.5) * 100 + 'px');
+                    el.style.setProperty('--ey', '-80px');
+                    el.style.setProperty('--r1', rot1);
+                    el.style.setProperty('--r2', rot2);
+
+                    el.style.left = '0';
+                    el.style.top = '0';
+                    el.style.transform = 'translate(' + startX + 'px, ' + startY + 'px)';
+
+                    document.body.appendChild(el);
+                    setTimeout(function() { el.remove(); }, parseFloat(dur) * 1000 + 200);
+                }, idx * 60);
+            })(i);
+        }
+    }
+
+    // ===== INITIALIZE PAGE =====
+    function initPage() {
+        var data = complimentsData[gender] || complimentsData.male;
+        var bgAnimation = document.getElementById('bgAnimation');
+
+        if (gender === 'male') {
+            bgAnimation.classList.add('male-bg');
+            document.body.classList.add('male-theme');
+        } else {
+            bgAnimation.classList.add('female-bg');
+            document.body.classList.add('female-theme');
+            initSparkleOverlay();
+        }
+
+        document.getElementById('greetingMessage').textContent = data.greeting;
+        document.getElementById('greetingSubtitle').textContent = data.subtitle;
+        document.title = gender === 'male' ? 'Hey Handsome ✨' : 'Hey Beautiful ✨';
+
+        var list = document.getElementById('complimentsList');
+        list.innerHTML = '';
+
+        data.messages.forEach(function(item, index) {
+            var card = document.createElement('div');
+            card.className = 'compliment-card';
+            card.style.animationDelay = (0.25 + index * 0.1) + 's';
+            card.innerHTML =
+                '<div class="compliment-icon">' + item.icon + '</div>' +
+                '<div class="compliment-text-wrap">' +
+                  '<p class="compliment-text">' + item.text + '</p>' +
+                  '<div class="card-click-hint">tap for love ❤️</div>' +
+                '</div>';
+            card.addEventListener('click', function() {
+                card.classList.add('heart-clicked');
+                setTimeout(function() { card.classList.remove('heart-clicked'); }, 500);
+                launchLoveExplosion(item);
+            });
+            list.appendChild(card);
+        });
+    }
+
+    // ===== SPARKLE FOR FEMALE =====
+    function initSparkleOverlay() {
+        var canvas = document.getElementById('sparkleOverlay');
+        if (!canvas) return;
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resize();
+        window.addEventListener('resize', resize);
+        for (var i = 0; i < 55; i++) {
+            particles.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                size: Math.random() * 3 + 1,
+                speedY: Math.random() * 0.5 + 0.1,
+                speedX: (Math.random() - 0.5) * 0.35,
+                alpha: Math.random(),
+                alphaDir: Math.random() > 0.5 ? 0.01 : -0.01
+            });
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(function(p) {
+                p.y -= p.speedY; p.x += p.speedX;
+                p.alpha += p.alphaDir;
+                if (p.alpha >= 1 || p.alpha <= 0.08) p.alphaDir *= -1;
+                if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+                ctx.save();
+                ctx.globalAlpha = p.alpha * 0.55;
+                ctx.fillStyle = '#ffc0cb';
+                ctx.shadowBlur = 20; ctx.shadowColor = '#ff69b4';
+                ctx.beginPath();
+                var s = p.size;
+                ctx.moveTo(p.x, p.y - s * 2);
+                ctx.lineTo(p.x + s * 0.5, p.y - s * 0.5);
+                ctx.lineTo(p.x + s * 2, p.y);
+                ctx.lineTo(p.x + s * 0.5, p.y + s * 0.5);
+                ctx.lineTo(p.x, p.y + s * 2);
+                ctx.lineTo(p.x - s * 0.5, p.y + s * 0.5);
+                ctx.lineTo(p.x - s * 2, p.y);
+                ctx.lineTo(p.x - s * 0.5, p.y - s * 0.5);
+                ctx.closePath(); ctx.fill(); ctx.restore();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+    // ===== PARTICLES =====
+    function generateParticles() {
+        var container = document.getElementById('particleContainer');
+        if (!container) return;
+        for (var i = 0; i < 45; i++) {
+            var p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDelay = Math.random() * 7 + 's';
+            p.style.animationDuration = (Math.random() * 4 + 5) + 's';
+            var size = Math.random() * 3.5 + 1.5;
+            p.style.width = size + 'px'; p.style.height = size + 'px';
+            container.appendChild(p);
+        }
+    }
+
+    // ===== NAV =====
+    function goBack() {
+        var overlay = document.getElementById('pageTransition');
+        overlay.style.setProperty('--transition-color', '#080812');
+        overlay.classList.add('active');
+        setTimeout(function() { window.location.href = 'index.html'; }, 550);
+    }
+    function goToInstagram() {
+        var overlay = document.getElementById('pageTransition');
+        overlay.style.setProperty('--transition-color', '#080812');
+        overlay.classList.add('active');
+        setTimeout(function() { window.location.href = 'instagram.html'; }, 550);
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (loveOverlay.classList.contains('active')) closeLoveOverlay();
+            else goBack();
+        }
+    });
+
+    // Parallax
+    document.addEventListener('mousemove', function(e) {
+        var shapes = document.querySelectorAll('.floating-shape');
+        var x = (e.clientX / window.innerWidth - 0.5) * 2;
+        var y = (e.clientY / window.innerHeight - 0.5) * 2;
+        shapes.forEach(function(shape, idx) {
+            var factor = (idx + 1) * 7;
+            shape.style.transform = 'translate(' + (x * factor) + 'px, ' + (y * factor) + 'px)';
+        });
+    });
+
+    window.addEventListener('DOMContentLoaded', function() {
+        initPage();
+        generateParticles();
+    });
+</script>
+</body>
+</html>
