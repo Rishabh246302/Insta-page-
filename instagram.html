@@ -1,400 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Final Mystery 🔮</title>
-    <meta name="description" content="The mysterious final page. Follow for the ultimate vibe.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Extra instagram-page specific styles */
-        .ig-feature-pills {
-            display: flex; flex-wrap: wrap; gap: 8px;
-            justify-content: center; margin-bottom: 28px;
-        }
-        .ig-pill {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.78rem; font-weight: 500;
-            padding: 6px 14px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.65);
-            letter-spacing: 0.2px;
-            opacity: 0;
-            animation: pillPop 0.5s var(--ease-spring) forwards;
-        }
-        @keyframes pillPop {
-            from { opacity: 0; transform: scale(0.7) translateY(10px); }
-            to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* Confetti button burst */
-        .confetti-particle {
-            position: fixed; pointer-events: none; z-index: 9999;
-            width: 8px; height: 8px; border-radius: 2px;
-            animation: confettiFall var(--dur, 2s) ease forwards;
-        }
-        @keyframes confettiFall {
-            0%   { transform: translate(var(--x), var(--y)) rotate(0deg) scale(1); opacity: 1; }
-            100% { transform: translate(var(--ex), var(--ey)) rotate(720deg) scale(0.3); opacity: 0; }
-        }
-
-        /* Typewriter cursor */
-        .typewriter-cursor {
-            display: inline-block;
-            width: 2px; height: 1em;
-            background: currentColor;
-            margin-left: 2px;
-            vertical-align: middle;
-            animation: blinkCursor 1s step-end infinite;
-        }
-        @keyframes blinkCursor { 0%,100%{opacity:1;} 50%{opacity:0;} }
-
-        /* Bottom tagline */
-        .ig-tagline {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.72rem;
-            color: rgba(255,255,255,0.2);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Final Mystery 🔮</title>
+  <meta name="description" content="Final mysterious Instagram follow page with premium neon effects." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="mystery-page">
+<body class="instagram-page mystery-page">
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div class="mystery-bg" aria-hidden="true">
+    <canvas id="starCanvas"></canvas>
+    <div class="mist mist-a"></div>
+    <div class="mist mist-b"></div>
+    <div class="emoji-layer" id="emojiLayer"></div>
+  </div>
 
-<div class="noise-overlay"></div>
+  <main class="page-shell instagram-shell">
+    <button class="back-btn" type="button" data-back-compliments>← Back</button>
 
-<!-- ANIMATED BACKGROUND -->
-<div class="background-animation mystery-bg" id="bgAnimation">
-    <canvas id="starfieldCanvas" class="starfield-canvas"></canvas>
-    <div class="mist-layer mist-1"></div>
-    <div class="mist-layer mist-2"></div>
-    <div class="floating-shape shape1"></div>
-    <div class="floating-shape shape2"></div>
-    <div class="floating-shape shape3"></div>
-    <div class="particle-container" id="particleContainer"></div>
-    <div class="floating-emoji" id="emojiContainer"></div>
-</div>
-
-<!-- PAGE TRANSITION -->
-<div class="page-transition-overlay" id="pageTransition">
-    <div class="transition-circle"></div>
-</div>
-
-<!-- INSTAGRAM PAGE -->
-<section class="page active" id="instagramPage">
-    <div class="content-wrapper" style="max-width:520px">
-        <button class="back-btn mystery-back" onclick="goBack()">
-            <span class="back-arrow">←</span>
-            <span>Back</span>
-        </button>
-
-        <div class="instagram-container mystery-container">
-            <div class="instagram-content mystery-content">
-
-                <!-- PROFILE -->
-                <div class="profile-image-wrapper">
-                    <div class="profile-ring">
-                        <div class="ring-glow"></div>
-                        <div class="profile-image-placeholder">
-                            <!-- CUSTOMIZE: Replace src with your photo -->
-                            <img
-                                src="https://ui-avatars.com/api/?name=R+C&size=200&background=8b5cf6&color=ffffff&bold=true&font-size=0.4"
-                                alt="Profile"
-                                class="profile-image"
-                                id="profileImage"
-                            >
-                        </div>
-                    </div>
-                    <div class="profile-status">
-                        <span class="status-dot"></span>
-                        <span class="status-text">Active now</span>
-                    </div>
-                </div>
-
-                <!-- Text reveal -->
-                <h1 class="mystery-title anim-reveal" style="--delay:0.2s">You made it here 😎</h1>
-                <p class="mystery-subtitle anim-reveal" style="--delay:0.45s">Now the real mystery begins…</p>
-
-                <!-- Divider -->
-                <div class="ig-divider anim-reveal" style="--delay:0.65s">
-                    <span class="divider-line"></span>
-                    <span class="divider-icon">📸</span>
-                    <span class="divider-line"></span>
-                </div>
-
-                <!-- Heading -->
-                <p class="instagram-heading anim-reveal" style="--delay:0.75s">Follow me on Instagram</p>
-
-                <!-- Handle -->
-                <div class="instagram-info anim-reveal" style="--delay:0.85s">
-                    <!-- CUSTOMIZE: Change this to your Instagram handle -->
-                    <p class="instagram-handle" id="igHandle">@_rishabh_246</p>
-                </div>
-
-                <!-- Stats -->
-                <div class="ig-stats anim-reveal" style="--delay:0.95s">
-                    <div class="ig-stat">
-                        <span class="ig-stat-num">✦</span>
-                        <span class="ig-stat-label">Vibes</span>
-                    </div>
-                    <div class="ig-stat">
-                        <span class="ig-stat-num">🔥</span>
-                        <span class="ig-stat-label">Energy</span>
-                    </div>
-                    <div class="ig-stat">
-                        <span class="ig-stat-num">💎</span>
-                        <span class="ig-stat-label">Premium</span>
-                    </div>
-                </div>
-
-                <!-- Feature pills -->
-                <div class="ig-feature-pills anim-reveal" style="--delay:1.0s" id="featurePills">
-                    <!-- injected by JS -->
-                </div>
-
-                <!-- CUSTOMIZE: Change href to your Instagram URL -->
-                <a
-                    href="https://www.instagram.com/_rishabh_246?igsh=dHF6dWoxNG9oOXcy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="instagram-btn neon-btn anim-reveal"
-                    style="--delay:1.1s"
-                    id="igFollowBtn"
-                    onclick="triggerConfetti(event)"
-                >
-                    <span class="btn-shimmer"></span>
-                    <span class="btn-content">
-                        <svg class="ig-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-                        </svg>
-                        <span>Follow on Instagram</span>
-                    </span>
-                </a>
-
-                <!-- Micro texts -->
-                <div class="micro-texts anim-reveal" style="--delay:1.25s">
-                    <p class="instagram-warning">⚠️ Warning: Following may increase your daily vibe.</p>
-                    <p class="instagram-note">Side effects: Confidence boost, endless inspiration & questionable memes 😄</p>
-                </div>
-
-                <p class="easter-egg anim-reveal" style="--delay:1.8s">
-                    🔮 The algorithm brought you here for a reason…
-                </p>
-                <p class="ig-tagline anim-reveal" style="--delay:2.0s">made with love ✦</p>
-            </div>
+    <section class="instagram-card reveal-in">
+      <div class="profile-wrap">
+        <div class="profile-ring">
+          <!-- Change profile image here -->
+          <img src="https://ui-avatars.com/api/?name=Rishabh+Chauhan&size=240&background=111827&color=ffffff&bold=true" alt="Instagram profile" />
         </div>
-    </div>
-</section>
+        <span class="status-chip"><span></span> mysterious but online</span>
+      </div>
 
-<script>
-    // ===== STARFIELD =====
-    (function() {
-        var canvas = document.getElementById('starfieldCanvas');
-        if (!canvas) return;
-        var ctx = canvas.getContext('2d');
-        var stars = [], shootingStars = [];
-        var STAR_COUNT = 260;
+      <div class="type-lines" aria-label="Final mystery messages">
+        <h1 class="type-line">You made it here 😎</h1>
+        <p class="type-line delay-1">Now the real mystery begins…</p>
+        <p class="type-line delay-2">Follow me before I disappear 👀</p>
+      </div>
 
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resize();
-        window.addEventListener('resize', resize);
+      <div class="handle-card">
+        <span>Instagram</span>
+        <!-- Change Instagram handle here -->
+        <strong id="igHandle">@_rishabh_246</strong>
+      </div>
 
-        for (var i = 0; i < STAR_COUNT; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.8 + 0.4,
-                alpha: Math.random(),
-                alphaSpeed: (Math.random() * 0.018 + 0.004) * (Math.random() > 0.5 ? 1 : -1),
-                color: 'hsl(' + (Math.random() * 70 + 215) + ', 75%, ' + (Math.random() * 30 + 58) + '%)'
-            });
-        }
+      <!-- Change Instagram link here -->
+      <a class="follow-btn glow-pulse" href="https://www.instagram.com/_rishabh_246?igsh=dHF6dWoxNG9oOXcy" target="_blank" rel="noopener noreferrer" data-confetti>
+        <span>Follow on Instagram</span>
+        <span>↗</span>
+      </a>
 
-        function spawnShootingStar() {
-            shootingStars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height * 0.45,
-                length: Math.random() * 120 + 50,
-                speed: Math.random() * 12 + 6,
-                alpha: 1,
-                angle: Math.PI / 4 + (Math.random() - 0.5) * 0.5
-            });
-        }
+      <p class="warning-copy">Warning: following may increase your vibe by 200%.</p>
+      <p class="tiny-copy">Side effects include: sudden confidence, premium aura, and laughing at your own jokes.</p>
+    </section>
+  </main>
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            stars.forEach(function(s) {
-                s.alpha += s.alphaSpeed;
-                if (s.alpha >= 1 || s.alpha <= 0.08) s.alphaSpeed *= -1;
-                ctx.save();
-                ctx.globalAlpha = s.alpha;
-                ctx.fillStyle = s.color;
-                ctx.shadowBlur = s.size * 6;
-                ctx.shadowColor = s.color;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            });
-
-            for (var i = shootingStars.length - 1; i >= 0; i--) {
-                var ss = shootingStars[i];
-                ss.x += Math.cos(ss.angle) * ss.speed;
-                ss.y += Math.sin(ss.angle) * ss.speed;
-                ss.alpha -= 0.014;
-                if (ss.alpha <= 0) { shootingStars.splice(i, 1); continue; }
-
-                var tailX = ss.x - Math.cos(ss.angle) * ss.length;
-                var tailY = ss.y - Math.sin(ss.angle) * ss.length;
-                var grad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
-                grad.addColorStop(0, 'transparent');
-                grad.addColorStop(1, 'rgba(168, 85, 247, ' + ss.alpha + ')');
-
-                ctx.save();
-                ctx.strokeStyle = grad;
-                ctx.lineWidth = 2.5;
-                ctx.lineCap = 'round';
-                ctx.beginPath();
-                ctx.moveTo(tailX, tailY);
-                ctx.lineTo(ss.x, ss.y);
-                ctx.stroke();
-
-                ctx.fillStyle = 'rgba(255,255,255,' + ss.alpha + ')';
-                ctx.shadowBlur = 24; ctx.shadowColor = '#a855f7';
-                ctx.beginPath();
-                ctx.arc(ss.x, ss.y, 2.8, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
-        setInterval(spawnShootingStar, 2000);
-        spawnShootingStar();
-    })();
-
-    // ===== FEATURE PILLS =====
-    var pills = ['✨ Vibe Curator', '🔥 Good Energy', '😎 Rare Find', '💫 Follow-worthy', '🎭 Authentic'];
-    var pillsContainer = document.getElementById('featurePills');
-    pills.forEach(function(text, i) {
-        var pill = document.createElement('div');
-        pill.className = 'ig-pill';
-        pill.textContent = text;
-        pill.style.animationDelay = (1.1 + i * 0.08) + 's';
-        pillsContainer.appendChild(pill);
-    });
-
-    // ===== CONFETTI BURST on button click =====
-    function triggerConfetti(e) {
-        var colors = ['#a855f7','#ec4899','#f97316','#fbbf24','#3b82f6','#22c55e','#fff'];
-        var cx = e.clientX, cy = e.clientY;
-        for (var i = 0; i < 60; i++) {
-            (function(idx) {
-                setTimeout(function() {
-                    var el = document.createElement('div');
-                    el.className = 'confetti-particle';
-                    var angle = (Math.PI * 2 * idx) / 60 + (Math.random() - 0.5) * 0.5;
-                    var dist = Math.random() * 220 + 80;
-                    var ex = Math.cos(angle) * dist;
-                    var ey = Math.sin(angle) * dist + 100;
-                    var dur = (Math.random() * 1.2 + 1.2) + 's';
-                    el.style.setProperty('--x', cx + 'px');
-                    el.style.setProperty('--y', cy + 'px');
-                    el.style.setProperty('--ex', (cx + ex) + 'px');
-                    el.style.setProperty('--ey', (cy + ey) + 'px');
-                    el.style.setProperty('--dur', dur);
-                    el.style.left = '0'; el.style.top = '0';
-                    el.style.transform = 'translate(' + cx + 'px, ' + cy + 'px)';
-                    el.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    el.style.width = (Math.random() * 8 + 5) + 'px';
-                    el.style.height = (Math.random() * 8 + 5) + 'px';
-                    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                    document.body.appendChild(el);
-                    setTimeout(function() { el.remove(); }, parseFloat(dur) * 1000 + 100);
-                }, idx * 15);
-            })(i);
-        }
-    }
-
-    // ===== FLOATING EMOJIS =====
-    function generateFloatingEmojis() {
-        var container = document.getElementById('emojiContainer');
-        if (!container) return;
-        var emojis = ['✨', '⭐', '🌟', '💫', '🔮', '🎆', '👀', '🌠', '😎', '💀', '🫡', '🪄', '🔥'];
-        for (var i = 0; i < 22; i++) {
-            var emoji = document.createElement('div');
-            emoji.className = 'floating-emoji-item';
-            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-            emoji.style.left = Math.random() * 100 + '%';
-            emoji.style.bottom = '-40px';
-            emoji.style.animationDelay = Math.random() * 16 + 's';
-            emoji.style.animationDuration = (Math.random() * 12 + 14) + 's';
-            emoji.style.fontSize = (Math.random() * 18 + 12) + 'px';
-            container.appendChild(emoji);
-        }
-    }
-
-    // ===== PARTICLES =====
-    function generateParticles() {
-        var container = document.getElementById('particleContainer');
-        if (!container) return;
-        for (var i = 0; i < 50; i++) {
-            var p = document.createElement('div');
-            p.className = 'particle mystery-particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.top = Math.random() * 100 + '%';
-            p.style.animationDelay = Math.random() * 7 + 's';
-            p.style.animationDuration = (Math.random() * 4 + 5) + 's';
-            var size = Math.random() * 3 + 1.5;
-            p.style.width = size + 'px'; p.style.height = size + 'px';
-            container.appendChild(p);
-        }
-    }
-
-    // ===== REVEAL ANIMATIONS =====
-    function initRevealAnimations() {
-        var elements = document.querySelectorAll('.anim-reveal');
-        elements.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateY(28px)'; });
-        elements.forEach(function(el) {
-            var delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
-            setTimeout(function() {
-                el.style.transition = 'opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1)';
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            }, delay * 1000 + 250);
-        });
-    }
-
-    // ===== NAV =====
-    function goBack() {
-        var overlay = document.getElementById('pageTransition');
-        overlay.style.setProperty('--transition-color', '#080812');
-        overlay.classList.add('active');
-        setTimeout(function() { window.location.href = 'index.html'; }, 550);
-    }
-
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') goBack(); });
-
-    document.addEventListener('mousemove', function(e) {
-        var shapes = document.querySelectorAll('.floating-shape');
-        var x = (e.clientX / window.innerWidth - 0.5) * 2;
-        var y = (e.clientY / window.innerHeight - 0.5) * 2;
-        shapes.forEach(function(shape, idx) {
-            shape.style.transform = 'translate(' + (x * (idx + 1) * 5) + 'px, ' + (y * (idx + 1) * 5) + 'px)';
-        });
-    });
-
-    window.addEventListener('DOMContentLoaded', function() {
-        generateParticles();
-        generateFloatingEmojis();
-        initRevealAnimations();
-    });
-</script>
+  <div class="page-transition" id="pageTransition" aria-hidden="true"></div>
+  <script src="script.js"></script>
 </body>
 </html>
