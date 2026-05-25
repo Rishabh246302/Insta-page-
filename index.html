@@ -1,128 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choose Your Vibe — Premium Experience</title>
-    <meta name="description" content="Choose your vibe and receive personalized premium compliments.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* cursor glow effect */
-        .cursor-glow {
-            position: fixed; pointer-events: none; z-index: 9999;
-            width: 400px; height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Choose Your Vibe — Premium Experience</title>
+  <meta name="description" content="Choose your vibe and receive a personalized premium compliment experience." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="home-page">
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
-<div class="cursor-glow" id="cursorGlow"></div>
-<div class="noise-overlay"></div>
+  <main class="page-shell">
+    <section class="hero-panel reveal-in">
+      <div class="orb orb-one" aria-hidden="true"></div>
+      <div class="orb orb-two" aria-hidden="true"></div>
+      <div class="particle-layer" id="particleLayer" aria-hidden="true"></div>
+      <div class="stars-layer" aria-hidden="true"></div>
 
-<!-- ANIMATED BACKGROUND -->
-<div class="background-animation" id="bgAnimation">
-    <div class="floating-shape shape1"></div>
-    <div class="floating-shape shape2"></div>
-    <div class="floating-shape shape3"></div>
-    <div class="particle-container" id="particleContainer"></div>
-</div>
+      <p class="eyebrow shimmer-text">✦ Premium Experience ✦</p>
+      <h1 class="hero-title">Choose Your Vibe</h1>
+      <p class="hero-subtitle">A tiny luxury compliment machine. Pick your energy and let the drama begin.</p>
 
-<!-- PAGE TRANSITION -->
-<div class="page-transition-overlay" id="pageTransition">
-    <div class="transition-circle"></div>
-</div>
+      <div class="vibe-grid" aria-label="Choose male or female vibe">
+        <button class="vibe-card male-card tilt-card" type="button" data-gender="male">
+          <span class="card-mini">Bold · Classy · Main Character</span>
+          <span class="card-icon">♔</span>
+          <span class="card-title">Male</span>
+          <span class="card-copy">Sharp energy, cool confidence, royal-level hype.</span>
+        </button>
 
-<!-- WELCOME PAGE -->
-<section class="page active" id="welcomePage">
-    <div class="welcome-container">
-        <div class="welcome-content">
-            <p class="welcome-eyebrow">✦ Premium Experience ✦</p>
-            <h1 class="welcome-title">Choose Your Vibe</h1>
-            <p class="welcome-subtitle">Select your energy and receive a personalized experience crafted just for you</p>
+        <button class="vibe-card female-card tilt-card" type="button" data-gender="female">
+          <span class="card-mini">Soft · Dreamy · Iconic</span>
+          <span class="card-icon">✧</span>
+          <span class="card-title">Female</span>
+          <span class="card-copy">Glow, grace, sparkle, and a little emotional damage to the algorithm.</span>
+        </button>
+      </div>
 
-            <div class="buttons-container">
-                <button class="vibe-card male-card" id="maleCard" onclick="selectVibe('male', event)">
-                    <span class="card-icon">♔</span>
-                    <span class="card-label">Male</span>
-                    <div class="card-glow"></div>
-                </button>
-                <button class="vibe-card female-card" id="femaleCard" onclick="selectVibe('female', event)">
-                    <span class="card-icon">✨</span>
-                    <span class="card-label">Female</span>
-                    <div class="card-glow"></div>
-                </button>
-            </div>
-        </div>
-    </div>
-</section>
+      <p class="home-note">No pressure. Just vibes. And maybe a little mystery 👀</p>
+    </section>
+  </main>
 
-<script>
-    // Cursor glow
-    var cursorGlow = document.getElementById('cursorGlow');
-    document.addEventListener('mousemove', function(e) {
-        cursorGlow.style.left = e.clientX + 'px';
-        cursorGlow.style.top = e.clientY + 'px';
-
-        // Parallax shapes
-        var shapes = document.querySelectorAll('.floating-shape');
-        var x = (e.clientX / window.innerWidth - 0.5) * 2;
-        var y = (e.clientY / window.innerHeight - 0.5) * 2;
-        shapes.forEach(function(shape, idx) {
-            var factor = (idx + 1) * 9;
-            shape.style.transform = 'translate(' + (x * factor) + 'px, ' + (y * factor) + 'px)';
-        });
-    });
-
-    // Particles
-    function generateParticles(count) {
-        count = count || 55;
-        var container = document.getElementById('particleContainer');
-        if (!container) return;
-        container.innerHTML = '';
-        for (var i = 0; i < count; i++) {
-            var p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.top = Math.random() * 100 + '%';
-            p.style.opacity = (Math.random() * 0.45 + 0.1).toString();
-            var size = Math.random() * 4 + 1.5;
-            p.style.width = size + 'px';
-            p.style.height = size + 'px';
-            p.style.animationDelay = (Math.random() * 7) + 's';
-            p.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            container.appendChild(p);
-        }
-    }
-
-    function selectVibe(gender, ev) {
-        try {
-            var card = ev && ev.currentTarget ? ev.currentTarget : null;
-            if (card) {
-                card.style.transform = 'scale(0.93)';
-                setTimeout(function() { card.style.transform = ''; }, 160);
-            }
-        } catch(e) {}
-        var overlay = document.getElementById('pageTransition');
-        if (overlay) {
-            overlay.style.setProperty('--transition-color', gender === 'male' ? '#080818' : '#120812');
-            overlay.classList.add('active');
-        }
-        setTimeout(function() {
-            window.location.href = 'compliments.html?gender=' + encodeURIComponent(gender);
-        }, 520);
-    }
-
-    window.addEventListener('DOMContentLoaded', function() {
-        generateParticles(55);
-        document.body.classList.add('loaded');
-    });
-</script>
+  <div class="page-transition" id="pageTransition" aria-hidden="true"></div>
+  <script src="script.js"></script>
 </body>
 </html>
